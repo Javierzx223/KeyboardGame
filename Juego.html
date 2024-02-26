@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: white;
+    }
+
+    #nav {
+      background-color: #336699;
+      padding: 20px;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+      width: 250px;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 1000;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      color: black;
+      font-size: 24px;
+    }
+
+    #status .text {
+      color: black;
+      font-size: 24px;
+      margin-top: 17px;
+    }
+
+    #status span {
+      display: block;
+      margin-bottom: 15px;
+    }
+
+    #status .img {
+      display: inline-block;
+      width: 250px;
+      height: 130px;
+      background-image: url('Aplasta Gl bos.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+      margin-bottom: 20px;
+      justify-content: center;
+    }
+
+    #teclado-container {
+      margin-top: 20px;
+      padding-left: 20px;
+    }
+
+    .tecla {
+      display: inline-block;
+      width: 38px;
+      height: 38px;
+      margin: 1.5px;
+      background-color: #abc8ff;
+      border: 1.5px solid #ccc;
+      text-align: center;
+      line-height: 38px;
+      cursor: pointer;
+      font-size: 30px;
+    }
+
+    .fila {
+      margin-bottom: 2px;
+    }
+
+    #canvas-container {
+      margin-left: 220px;
+      height: 100%;
+      position: relative;
+      background-image: url('cielo.jpg');
+      background-size: cover;
+      padding-top: 50px;
+    }
+
+    canvas {
+      width: calc(100% - 220px);
+      height: 100%;
+      display: block;
+      margin: auto;
+      background-color: transparent;
+    }
+
+    .letter-image {
+      position: absolute;
+      width: 40px;
+      height: 40px;
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+
+    .globo {
+      position: absolute;
+      width: 60px;
+      height: 80px;
+      background-color: #ffcc00;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .letra {
+      color: #ffffff;
+      font-size: 24px;
+    }
+
+    #game-over {
+      position: absolute;
+      top: 40%;
+      left: 55%;
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      transform: translate(-50%, -50%);
+      background-color: #ff0000;
+      color: white;
+      padding: 30px;
+      font-size: 30px;
+      border: none;
+      cursor: pointer;
+      display: block;
+      border-radius: 5px;
+      border: none;
+    }
+    
+    #reset-button {
+      position: absolute;
+      top: 55%;
+      left: 55%;
+      transform: translate(-50%, -50%);
+      font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+      background-color: #ff0000;
+      color: white;
+      padding: 30px;
+      font-size: 30px;
+      border: none;
+      cursor: pointer;
+      display: block;
+      border-radius: 5px;
+      border: none;
+    }
+    #reset-button:hover{
+        background-color: #150D6A;
+    }
+    .tecla.pulsada {
+      background-color: rgb(232, 59, 20);
+    }
+    
+    h4 {
+      color: #0cad00;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="nav">
+    <div id="status">
+      <span class="img"></span>
+      <span class="text">Correcto: 0</span>
+      <span class="text">Errores: 0</span>
+      <span class="text">Perdidos: 0</span>
+      <span class="text">Nivel: 1</span>
+    </div>
+    <div>
+      <h4>Primera linea</h4>
+    </div>
+    <div class="fila">
+      <div class="tecla" id="Q">Q</div>
+      <div class="tecla" id="W">W</div>
+      <div class="tecla" id="E">E</div>
+      <div class="tecla" id="R">R</div>
+      <div class="tecla" id="T">T</div>
+      <div class="tecla" id="Y">Y</div>
+      <div class="tecla" id="U">U</div>
+      <div class="tecla" id="I">I</div>
+      <div class="tecla" id="O">O</div>
+      <div class="tecla" id="P">P</div>
+    </div>
+    <div>
+      <h4>Segunda linea</h4>
+    </div>
+    <div class="fila">
+      <div class="tecla" id="A">A</div>
+      <div class="tecla" id="S">S</div>
+      <div class="tecla" id="D">D</div>
+      <div class="tecla" id="F">F</div>
+      <div class="tecla" id="G">G</div>
+      <div class="tecla" id="H">H</div>
+      <div class="tecla" id="J">J</div>
+      <div class="tecla" id="K">K</div>
+      <div class="tecla" id="L">L</div>
+      <div class="tecla" id="Ñ">Ñ</div>
+    </div>
+    <div>
+      <h4>Tercera linea</h4>
+    </div>
+    <div class="fila">
+      <div class="tecla" id="Z">Z</div>
+      <div class="tecla" id="X">X</div>
+      <div class="tecla" id="C">C</div>
+      <div class="tecla" id="V">V</div>
+      <div class="tecla" id="B">B</div>
+      <div class="tecla" id="N">N</div>
+      <div class="tecla" id="M">M</div>
+    </div>
+  </div>
+
+  <div id="canvas-container">
+    <canvas id="idCanvas" height="600px" width="800px"></canvas>
+    <button id="game-over" style="display: none;">GAME OVER</button>
+    <button id="reset-button">Reiniciar</button> <!-- Botón de reinicio -->
+  </div>
+</body>
+
+<script>
+  const ALPHABET = [
+    'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'
+  ];
+
+  let text = [];
+  let difficulty = 1;
+  let lettersGenerated = 0;
+  let intervalHandler;
+  let globoPosition = { x: 0, y: -100 };
+  let globoSpeed = 90; // Velocidad del globo
+  const letterSpeed = 90; // Velocidad de las letras en milisegundos
+
+  const FONT_SIZE = 40;
+
+  const score = {
+    errors: 0,
+    correct: 0,
+    missed: 0,
+  }
+
+  document.addEventListener('keydown', function(event) {
+    var tecla = document.getElementById(event.key.toUpperCase());
+    if (tecla) {
+      tecla.classList.add('pulsada');
+    }
+  });
+
+  document.addEventListener('keyup', function(event) {
+    var tecla = document.getElementById(event.key.toUpperCase());
+    if (tecla) {
+      tecla.classList.remove('pulsada');
+    }
+  });
+
+  function render(canvas, ctx) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Dibujar las letras y los globos
+    text.forEach(({ letter, width, height, color }) => {
+      // Dibujar el globo
+      ctx.beginPath();
+      ctx.arc(width + 20, height - 40, 30, 0, 2 * Math.PI);
+      ctx.fillStyle = color;
+      ctx.fill();
+
+      // Dibujar la letra
+      ctx.fillStyle = "#ffffff";
+      const textWidth = ctx.measureText(letter).width;
+      ctx.fillText(letter, width + 20 - textWidth / 2, height - 35);
+    });
+
+    document.getElementById('status').innerHTML = `
+      <span class="img"></span>
+      <span class="text">Correcto: ${score.correct}</span>
+      <span>Errores: ${score.errors}</span>
+      <span>Perdidos: ${score.missed}</span>
+      <span>Nivel: ${difficulty}</span>
+    `;
+
+    if (score.errors >= 20 || score.missed >= 20) {
+      clearInterval(intervalHandler);
+      intervalHandler = null;
+      document.getElementById('game-over').style.display = 'block';
+      document.getElementById('reset-button').style.display = 'block'; // Mostrar el botón de reinicio
+    }
+  }
+
+  function shouldAddLetter() {
+    const probability = difficulty / 20;
+    return Math.random() < probability;
+  }
+
+  function getRandomLetter() {
+    const index = Math.floor(Math.random() * ALPHABET.length);
+    return ALPHABET[index];
+  }
+
+  function getRandomWidth(canvas) {
+    return Math.floor(canvas.width / 4 + Math.random() * canvas.width / 2); // Genera posiciones X más centradas
+  }
+
+  function getRandomColor() {
+    const colors = ["#ff0000", "#00ff00", "#000000", "#ffa500","#4a148c","#3e2723"]; // Rojo, verde, amarillo, naranja
+    const index = Math.floor(Math.random() * colors.length);
+    return colors[index];
+  }
+
+  function translateLetters(canvas) {
+    const maxHeight = canvas.height - FONT_SIZE - 50;
+    text = text.map(x => {
+      return {
+        ...x,
+        height: x.height + 15,
+      }
+    });
+
+    score.missed += text.filter(({ height }) => height >= canvas.height).length;
+    text = text.filter(({ height }) => height < canvas.height);
+  }
+
+  function translateGlobo(canvas) {
+    globoPosition.y += globoSpeed;
+    if (globoPosition.y > canvas.height) {
+      globoPosition.y = -100;
+      globoPosition.x = Math.floor(Math.random() * (canvas.width - 60)); // Ajusta la posición del globo
+    }
+  }
+
+  window.onload = () => {
+    const canvas = document.getElementById("idCanvas");
+    const ctx = canvas.getContext("2d");
+    ctx.font = `${FONT_SIZE}px Verdana`;
+
+    document.onkeyup = ({ key }) => {
+      if (!intervalHandler) {
+        return;
+      }
+
+      const indexToRemove = text.findIndex(({ letter }) => letter.toLowerCase() === key);
+
+      if (indexToRemove >= 0) {
+        text.splice(indexToRemove, 1);
+        score.correct += 1;
+      } else {
+        score.errors += 1;
+      }
+
+      render(canvas, ctx);
+    }
+
+    intervalHandler = setInterval(() => {
+      translateLetters(canvas);
+      translateGlobo(canvas);
+
+      if (shouldAddLetter()) {
+        if (lettersGenerated === (10 + difficulty * 5)) {
+          lettersGenerated = 0;
+          difficulty += 1;
+          globoSpeed += 1; // Aumenta la velocidad del globo con el nivel
+        } else {
+          lettersGenerated += 1;
+        }
+
+        const color = getRandomColor(); // Obtener un color aleatorio para el globo
+        text.push({
+          letter: getRandomLetter(),
+          width: getRandomWidth(canvas),
+          height: -100,
+          color: color, // Asignar el color aleatorio al globo
+        });
+      }
+
+      render(canvas, ctx);
+    }, letterSpeed);
+
+    render(canvas, ctx);
+    document.getElementById('game-over').style.display = 'none'; // Ocultar mensaje de game over
+    document.getElementById('reset-button').style.display = 'none'; // Ocultar botón de reinicio
+
+    // Agregar evento de clic al botón de reinicio
+    document.getElementById('reset-button').addEventListener('click', () => {
+      location.reload(); // Recargar la página para reiniciar el juego
+    });
+  }
+</script>
+
+</html>
